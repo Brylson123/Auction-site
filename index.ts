@@ -10,6 +10,9 @@ app.use(urlencoded({
     extended: true,
 }))
 
+app.get('/', (req, res) => {
+    res.send('It works!')
+})
 
 app.listen(3000, 'localhost',()=>
     console.log('listening on http://localhost:3000'
