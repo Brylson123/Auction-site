@@ -1,4 +1,4 @@
-# AUCTION-SITE
+# AuctionSite - backend
 
 ## Tech Stack
 
