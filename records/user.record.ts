@@ -1,6 +1,8 @@
 import {v4 as uuid} from "uuid";
 import {pool} from "../utils/db";
+import {FieldPacket} from "mysql2";
 
+type UserRecordResults = [UserRecord[], FieldPacket[]]
 
 export class UserRecord {
     public id?: string;
@@ -29,5 +31,11 @@ export class UserRecord {
         return this.id;
     }
 
+    static async getOne(id: string): Promise<UserRecord | null> {
+        const [results] = await pool.execute("SELECT * FROM `users` WHERE `id` = :id", {
+            id,
+        }) as UserRecordResults;
 
+        return results.length === 0 ? null : new UserRecord(results[0]);
+    }
 }
