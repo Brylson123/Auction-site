@@ -1,6 +1,7 @@
 import {v4 as uuid} from "uuid";
 import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
+import {ValidationError} from "../utils/error";
 
 type UserRecordResults = [UserRecord[], FieldPacket[]]
 
@@ -13,6 +14,13 @@ export class UserRecord {
     constructor(obj: Omit<UserRecord, 'insert'>) {
         const {id, name, email, password} = obj;
 
+        if(name.length < 3 && name.length > 50){
+            throw new ValidationError(`Imię musi posiadać od 3 do 50 znaków. Aktualnie jest to ${name.length}.`)
+        }
+
+        if(password.length < 5 && password.length > 50){
+            throw new ValidationError(`Hasło musi posiadać od 5 do 50 znaków. Aktualnie jest to ${password.length}.`)
+        }
 
         this.id = id ?? uuid();
         this.name = name;
