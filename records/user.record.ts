@@ -11,7 +11,7 @@ export class UserRecord {
     public readonly email: string;
     public readonly password: string;
 
-    constructor(obj: Omit<UserRecord, 'insert'>) {
+    constructor(obj: Omit<UserRecord, 'insert' | 'update'>) {
         const {id, name, email, password} = obj;
 
         if(name.length < 3 && name.length > 50){
