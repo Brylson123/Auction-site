@@ -19,7 +19,7 @@ export class UserRecord {
         this.email = email;
         this.password = password;
 
-    }
+    };
 
     async insert(): Promise<string> {
         await pool.execute("INSERT INTO `users`(`id`, `name`, `email`, `password`) VALUES (:id, :name, :email, :password)", {
@@ -29,7 +29,16 @@ export class UserRecord {
             password: this.password,
         });
         return this.id;
-    }
+    };
+
+    async update(): Promise<void> {
+        await pool.execute("UPDATE `users` SET `name` = :name, `email` = :email, `password` = :password WHERE `id` = :id", {
+            id: this.id,
+            name: this.name,
+            email: this.email,
+            password: this.password,
+        });
+    };
 
     static async getOne(id: string): Promise<UserRecord | null> {
         const [results] = await pool.execute("SELECT * FROM `users` WHERE `id` = :id", {
@@ -37,5 +46,5 @@ export class UserRecord {
         }) as UserRecordResults;
 
         return results.length === 0 ? null : new UserRecord(results[0]);
-    }
+    };
 }
