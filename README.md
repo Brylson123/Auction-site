@@ -1,6 +1,6 @@
 # AuctionSite - backend
 
-## Tech Stack
+## Tech Stack I will use
 
 - TypesScript
 - NodeJS
