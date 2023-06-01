@@ -3,27 +3,29 @@ import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
 import {ValidationError} from "../utils/error";
 
-
 type OfferRecordResults = [OfferRecord[], FieldPacket[]]
 
 export class OfferRecord {
     public id?: string;
-    public readonly nameOfProduct: string;
-    public readonly price: number;
-    public readonly amount: number;
+    public nameOfProduct: string;
+    public price: number;
+    public amount: number;
+    public conditon: string;
+    public description: string;
+
 
     constructor(obj: Omit<OfferRecord, 'insert' | 'update'>) {
-        const {id, nameOfProduct, price, amount} = obj;
+        const {id, nameOfProduct, price, amount, conditon, description} = obj;
 
-        if (amount < 1 && amount > 999) {
+        if (amount < 1 || amount > 999) {
             throw new ValidationError(`Ilość przedmiotów powinna być od 1 do 999. Aktualnie jest to ${amount}.`)
         }
 
-        if (nameOfProduct.length < 3 && nameOfProduct.length > 50) {
+        if (nameOfProduct.length < 3 || nameOfProduct.length > 50) {
             throw new ValidationError(`Imię musi posiadać od 3 do 36 znaków. Aktualnie jest to ${nameOfProduct.length}.`)
         }
 
-        if (price < 0.99 && price > 99999999.99) {
+        if (price < 0.99 || price > 99999999.99) {
             throw new ValidationError(`Cena powinna wynosić między 0.99 a 99999999.99. Teraz wynosi ${price}`)
         }
 
@@ -31,25 +33,31 @@ export class OfferRecord {
         this.nameOfProduct = nameOfProduct;
         this.price = price;
         this.amount = amount;
+        this.conditon = conditon;
+        this.description = description;
 
     };
 
     async insert(): Promise<string> {
-        await pool.execute("INSERT INTO `offer`(`id`, `nameOfProduct`, `price`, `amount`) VALUES (:id, :nameOfProduct, :price, :amount)", {
+        await pool.execute("INSERT INTO `offer`(`id`, `nameOfProduct`, `price`, `amount`, `condition`, `description`) VALUES (:id, :nameOfProduct, :price, :amount, :conditon, :description)", {
             id: this.id,
             nameOfProduct: this.nameOfProduct,
             price: this.price,
             amount: this.amount,
+            conditon: this.conditon,
+            description: this.description,
         });
         return this.id;
     };
 
     async update(): Promise<void> {
-        await pool.execute("UPDATE `offer` SET `nameOfProduct` = :nameOfProduct, `price` = :price, `amount` = :amount WHERE `id` = :id", {
+        await pool.execute("UPDATE `offer` SET `nameOfProduct` = :nameOfProduct, `price` = :price, `amount` = :amount, `conditon` = :conditon, `description` = :description WHERE `id` = :id", {
             id: this.id,
             nameOfProduct: this.nameOfProduct,
             price: this.price,
             amount: this.amount,
+            conditon: this.conditon,
+            description: this.description,
         });
     };
 
@@ -62,7 +70,7 @@ export class OfferRecord {
     };
 
     static async listAll(): Promise<OfferRecord[]> {
-        const [results] = await pool.execute("SELECT * FROM `warriors`") as OfferRecordResults;
+        const [results] = await pool.execute("SELECT * FROM `offer`") as OfferRecordResults;
 
         return results.map(obj => new OfferRecord(obj))
     };
