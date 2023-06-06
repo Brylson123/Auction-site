@@ -7,9 +7,9 @@ type UserRecordResults = [UserRecord[], FieldPacket[]]
 
 export class UserRecord {
     public id?: string;
-    public readonly name: string;
-    public readonly email: string;
-    public readonly password: string;
+    public name: string;
+    public email: string;
+    public password: string;
 
     constructor(obj: Omit<UserRecord, 'insert' | 'update'>) {
         const {id, name, email, password} = obj;

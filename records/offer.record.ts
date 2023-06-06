@@ -61,6 +61,12 @@ export class OfferRecord {
         });
     };
 
+    async delete(): Promise<void> {
+        await pool.execute("DELETE FROM `offer` WHERE `id` = :id", {
+            id: this.id,
+        });
+    };
+
     static async getOne(id: string): Promise<OfferRecord | null> {
         const [results] = await pool.execute("SELECT * FROM `offer` WHERE `id` = :id", {
             id,
