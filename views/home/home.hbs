@@ -1,1 +1,27 @@
 <p>Witamy na stronie Aukcyjnej!</p>
+<table>
+    <tbody>
+    {{#each offers}}
+        <tr>
+            <th>{{this.nameOfProduct}}</th>
+
+            <td>
+                {{this.price}}zł
+            </td>
+
+            <td>
+                Sztuk: {{this.amount}}
+            </td>
+
+            <td>
+             Stan: {{this.condition}}
+
+            </td>
+
+            <td>
+               Opis: {{this.description}}
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
